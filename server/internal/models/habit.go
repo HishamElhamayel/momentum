@@ -10,5 +10,5 @@ type Habit struct {
 	Description string `gorm:"size:255; not null"`
 	CreatedAt time.Time
 
-	Logs []HabitLog
+	Logs []HabitLog `gorm:"constraint:OnDelete:CASCADE;"`
 }

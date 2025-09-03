@@ -3,9 +3,9 @@ package models
 import "time"
 
 type User struct {
-	ID uint 
-	Name string `grom:"size:100;not null"`
-	Email string `gorm:"size:100; not null; uniqIndex"`
+	ID uint `gorm:"primaryKey;autoIncrement"`
+	Name string `gorm:"not null"`
+	Email string `gorm:"not null;unique"`
 	Password string `gorm:"not null" json:"-"`
 	CreatedAt time.Time
 
