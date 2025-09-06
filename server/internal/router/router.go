@@ -19,14 +19,16 @@ func Setup(db *gorm.DB) *gin.Engine{
 
 	habitHandler := handlers.HabitHandler{DB: db}
 	habits := r.Group("/habits", middleware.AuthMiddleware())
-	
 	{
 		habits.POST("/", habitHandler.CreateHabit)
 		habits.GET("/", habitHandler.GetHabits)
 		habits.PUT("/:id", habitHandler.UpdateHabit)
 		habits.DELETE("/:id", habitHandler.DeleteHabit)
-
 	}
+
+	habitLogsHandler := handlers.HabitLogHandler{DB: db}
+	r.POST("/:id/logs/toggle", middleware.AuthMiddleware(),habitLogsHandler.ToggleHabitLog)
+	r.GET("/:id/logs", middleware.AuthMiddleware(),habitLogsHandler.GetLogs)
 
 	return r
 }

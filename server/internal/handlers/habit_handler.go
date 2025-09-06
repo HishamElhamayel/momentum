@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 
 	"example.com/momentum/internal/models"
@@ -33,7 +34,10 @@ func (h *HabitHandler) CreateHabit(c *gin.Context){
 		UserID: userID.(uint),
 	}
 
-	if err := h.DB.Create(&habit); err != nil{
+
+	result:= h.DB.Create(&habit)
+
+	if result.Error != nil{
 		c.JSON(http.StatusInternalServerError, gin.H{"Error": "Failed to create habit"})
 		return
 	}
@@ -59,9 +63,13 @@ func (h *HabitHandler) UpdateHabit(c *gin.Context){
 	id := c.Param("id")
 
 	var habit models.Habit
-	if err := h.DB.Where("id=? AND user_id=?",id,userID); err != nil{
+	result := h.DB.Where("id=? AND user_id=?",id,userID).First(&habit); 
+	if result.Error != nil{
 		c.JSON(http.StatusNotFound, gin.H{"Error": "Couldn't find habit"})
+		return
 	}
+
+	fmt.Println(result.Error)
 
 	var input struct {
 		Title string `json:"title"`
@@ -70,6 +78,7 @@ func (h *HabitHandler) UpdateHabit(c *gin.Context){
 
 	if err := c.ShouldBindJSON(&input); err != nil{
 		c.JSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
+		return
 	}
 
 	habit.Title = input.Title
@@ -83,7 +92,18 @@ func (h *HabitHandler) DeleteHabit(c *gin.Context){
 	userID, _ := c.Get("userID")
 	id := c.Param("id")
 
-	if err := h.DB.Where("id=? AND user_id=?",id,userID).Delete(&models.Habit{}).Error; err != nil{
-		c.JSON(http.StatusOK, gin.H{"Message":"Habit Deleted"})
+	result := h.DB.Where("id=? AND user_id=?",id,userID).Delete(&models.Habit{}); 
+
+	if result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to delete habit"})
+		return
 	}
+
+	if result.RowsAffected == 0 {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Habit not found"})
+		return
+	}
+
+	c.JSON(http.StatusNoContent, gin.H{})
+
 }
