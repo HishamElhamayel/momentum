@@ -1,7 +1,12 @@
-import { TextInput } from 'react-native';
+import { TextInput, TextInputProps } from 'react-native';
 
-const FormInput = ({ placeholder }: { placeholder: string }) => {
-  return <TextInput placeholder={placeholder} className="rounded-md border border-gray-300 p-2" />;
+const FormInput = (props: TextInputProps) => {
+  return (
+    <TextInput
+      className="my-3 rounded-lg border border-gray-300 bg-gray-100 px-3 py-5 focus:border-accent focus:ring-accent"
+      {...props}
+    />
+  );
 };
 
 export default FormInput;
