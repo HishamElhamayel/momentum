@@ -1,7 +1,12 @@
+import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export const Container = ({ children }: { children: React.ReactNode }) => {
-  return <SafeAreaView className={styles.container}>{children}</SafeAreaView>;
+  return (
+    <NavigationContainer>
+      <SafeAreaView className={styles.container}>{children}</SafeAreaView>
+    </NavigationContainer>
+  );
 };
 
 const styles = {

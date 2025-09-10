@@ -1,17 +1,16 @@
-import { StatusBar } from 'expo-status-bar';
-
 import { Container } from 'app/UI/Container';
-import Register from 'app/screen/Register';
+import { AuthNavigator } from 'app/navigator/AuthNavigator';
+import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import './global.css';
 
 export default function App() {
   return (
     <>
+      <StatusBar style="auto" />
       <SafeAreaProvider>
         <Container>
-          <StatusBar style="auto" />
-          <Register />
+          <AuthNavigator />
         </Container>
       </SafeAreaProvider>
     </>
